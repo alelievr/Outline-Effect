@@ -2,6 +2,8 @@ Outline Effect
 ======================
 Outline Image Effect for Unity
 
+Forked from: https://github.com/cakeslice/Outline-Effect
+
 https://gfycat.com/RashGenuineBlackwidowspider
 
 ![](http://i.imgur.com/yAKd5Qg.png "Optional title")
@@ -18,23 +20,39 @@ Erase option to keep outlines behind specific sprite/line renderers
 
 Per sprite/line renderer color support (up to three)
 
+NEW FEATURES:
+-----------
+✓ No more number of color limit on outlined objects
+
+✓ Possibility to see outline behind transparent sprite/texture.
+
+✓ Possibility to activate glow on semi-transparent sprites
+
+✓ Outline intencity (outline color fade away)
+
+✓ Outline superposition
+
+✓ full colorization mode
+
+✓ Color form last pixel encountered (like some TVs)
+
+TODO:
+----------
+
+No graphic glitchs on simple polygon glow
+
+Color blend animation support and glow size
 
 INSTALLATION:
 ------------
 Download the files and open the project OR place the "Assets/OutlineEffect" folder in your Assets folder
 
-USAGE:
-------------
 Add a layer called "Outline"
 
 Add Outline Effect component to camera
 
-Add Renderer objects to "Outline Renderers" in the script OR replace the list from your scripts
+Add Outline script to every sprite you want to be outlined.
 
 NOTE:
 ------------
 I do not own the Half Life sprite and it's used for demonstration purposes only under fair use.
-
-TWITTER:
-------------
-[cakeslice_dev](https://twitter.com/cakeslice_dev)
