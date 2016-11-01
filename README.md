@@ -28,20 +28,22 @@ NEW FEATURES:
 
 ✓ Possibility to activate glow on semi-transparent sprites
 
-✓ Outline intencity (outline color fade away)
+✓ Outline intensity (outline color fade away)
 
 ✓ Outline superposition
 
 ✓ full colorization mode
 
-✓ Color form last pixel encountered (like some TVs)
+✓ Color from last pixel encountered (like some TVs)
 
 TODO:
 ----------
 
-No graphic glitchs on simple polygon glow
+No graphic glitches on simple polygon glow
 
 Color blend animation support and glow size
+
+Outline Editor (like polygon collider editor)
 
 INSTALLATION:
 ------------

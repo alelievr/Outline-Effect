@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(Renderer))]
 public class Outline : MonoBehaviour
@@ -15,11 +15,13 @@ public class Outline : MonoBehaviour
     public float    alphaCutoff = .5f;
     public bool     pixelSnap = false;
 
-    //TODO: implement
     [Space]
     public bool     flipY = false;
     public bool     allowOutlineOverlap = true;
     public bool     autoColor = false;
+    public bool     autoOutline = true;
+
+    public List< Vector3 > outlineVertices = new List< Vector3 >();
     
     OutlineEffect   outlineEffect;
 
@@ -46,6 +48,10 @@ public class Outline : MonoBehaviour
 
 	void Start()
     {
+        outlineVertices[0] = Vector3.zero;
+        outlineVertices[1] = Vector3.up;
+        outlineVertices[2] = Vector3.one;
+        outlineVertices[3] = Vector3.right;
         outlineLayer = LayerMask.NameToLayer("Outline");
         renderer = GetComponent< Renderer >();
         outlineMaterial = CreateNewOutlineMaterial(color);
