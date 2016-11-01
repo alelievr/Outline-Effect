@@ -45,6 +45,8 @@ Color blend animation support and glow size
 
 Outline Editor (like polygon collider editor)
 
+Bezier curve for custom outline
+
 INSTALLATION:
 ------------
 Download the files and open the project OR place the "Assets/OutlineEffect" folder in your Assets folder

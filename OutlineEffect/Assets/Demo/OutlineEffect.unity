@@ -372,14 +372,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fullSpriteGlow: 0
   color: {r: 1, g: 0, b: 0, a: 1}
-  lineThickness: 4
+  lineThickness: 1
   lineIntensity: .5
   alphaCutoff: .5
   pixelSnap: 0
   flipY: 0
   allowOutlineOverlap: 1
   autoColor: 0
-  autoOutline: 1
+  autoOutline: 0
+  lastLinkedToFirst: 0
+  outlineBezier: 0
   outlineVertices: []
 --- !u!1 &508253892
 GameObject:
@@ -411,7 +413,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fullSpriteGlow: 0
   color: {r: 0, g: .580882311, b: .316480637, a: 1}
-  lineThickness: 4
+  lineThickness: 1
   lineIntensity: .5
   alphaCutoff: .5
   pixelSnap: 0
@@ -419,11 +421,18 @@ MonoBehaviour:
   allowOutlineOverlap: 1
   autoColor: 0
   autoOutline: 0
+  lastLinkedToFirst: 1
+  outlineBezier: 1
   outlineVertices:
-  - {x: .0135010481, y: .521015286, z: 0}
-  - {x: .105672002, y: .351052046, z: 0}
-  - {x: .170821548, y: .240137175, z: 0}
-  - {x: .126065135, y: -.336030304, z: 0}
+  - position: {x: -.135905266, y: -.464644879, z: 0}
+    t1: {x: .126874328, y: -.111050218, z: 0}
+    t2: {x: -.205170751, y: .234731793, z: 0}
+  - position: {x: .0260363817, y: .531235039, z: 0}
+    t1: {x: -.20759356, y: .0021443367, z: 0}
+    t2: {x: .212179661, y: .0242399573, z: 0}
+  - position: {x: .147667706, y: -.475415081, z: 0}
+    t1: {x: .18310529, y: .168899417, z: 0}
+    t2: {x: -.133336127, y: -.104263872, z: 0}
 --- !u!212 &508253894
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -458,7 +467,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 508253892}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.02199996, y: .128000006, z: 1}
+  m_LocalPosition: {x: -1.13600004, y: -.061999999, z: 1}
   m_LocalScale: {x: .5, y: .5, z: .5}
   m_Children: []
   m_Father: {fileID: 0}
@@ -532,7 +541,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fullSpriteGlow: 0
   color: {r: .0344827175, g: 1, b: 0, a: 1}
-  lineThickness: 4
+  lineThickness: 1
   lineIntensity: .5
   alphaCutoff: .5
   pixelSnap: 0
@@ -540,6 +549,8 @@ MonoBehaviour:
   allowOutlineOverlap: 1
   autoColor: 0
   autoOutline: 1
+  lastLinkedToFirst: 1
+  outlineBezier: 1
   outlineVertices: []
 --- !u!1 &1571299884
 GameObject:
@@ -640,7 +651,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fullSpriteGlow: 0
   color: {r: 0, g: 0, b: 0, a: 0}
-  lineThickness: 4
+  lineThickness: 1
   lineIntensity: .5
   alphaCutoff: .5
   pixelSnap: 0
@@ -648,6 +659,8 @@ MonoBehaviour:
   allowOutlineOverlap: 1
   autoColor: 0
   autoOutline: 1
+  lastLinkedToFirst: 1
+  outlineBezier: 1
   outlineVertices: []
 --- !u!212 &1937169228
 SpriteRenderer:
@@ -718,7 +731,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fullSpriteGlow: 0
   color: {r: 1, g: .972413778, b: 0, a: 1}
-  lineThickness: 4
+  lineThickness: 1
   lineIntensity: .5
   alphaCutoff: .5
   pixelSnap: 0
@@ -726,6 +739,8 @@ MonoBehaviour:
   allowOutlineOverlap: 1
   autoColor: 0
   autoOutline: 1
+  lastLinkedToFirst: 1
+  outlineBezier: 1
   outlineVertices: []
 --- !u!1 &2143441684
 GameObject:

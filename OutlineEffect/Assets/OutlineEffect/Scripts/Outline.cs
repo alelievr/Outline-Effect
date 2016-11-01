@@ -19,9 +19,13 @@ public class Outline : MonoBehaviour
     public bool     flipY = false;
     public bool     allowOutlineOverlap = true;
     public bool     autoColor = false;
-    public bool     autoOutline = true;
 
-    public List< Vector3 > outlineVertices = new List< Vector3 >();
+    [Space]
+    public bool     autoOutline = true;
+    public bool     lastLinkedToFirst = true;
+    public bool     outlineBezier = true;
+
+    public List< OutlineVertice > outlineVertices = new List< OutlineVertice >();
     
     OutlineEffect   outlineEffect;
 
@@ -48,10 +52,6 @@ public class Outline : MonoBehaviour
 
 	void Start()
     {
-        outlineVertices[0] = Vector3.zero;
-        outlineVertices[1] = Vector3.up;
-        outlineVertices[2] = Vector3.one;
-        outlineVertices[3] = Vector3.right;
         outlineLayer = LayerMask.NameToLayer("Outline");
         renderer = GetComponent< Renderer >();
         outlineMaterial = CreateNewOutlineMaterial(color);
@@ -103,5 +103,25 @@ public class Outline : MonoBehaviour
 
         renderer.material = originalMaterial;
         gameObject.layer = originalLayer;
+    }
+
+    [System.Serializable]
+    public class OutlineVertice
+    {
+        public Vector3 position;
+        public Vector3 t1;
+        public Vector3 t2;
+
+        public OutlineVertice(Vector3 pos)
+        {
+            position = pos;
+        }
+        
+        public OutlineVertice(Vector3 pos, Vector3 t1, Vector3 t2)
+        {
+            position = pos;
+            this.t1 = t1;
+            this.t2 = t2;
+        }
     }
 }
