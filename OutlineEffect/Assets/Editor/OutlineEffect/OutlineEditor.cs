@@ -27,7 +27,7 @@ public class OutlineEditor : Editor
 			true
 		);
 
-		outlineVerticesList.drawElementCallback = 
+		outlineVerticesList.drawElementCallback =
 			(Rect rect, int index, bool isActive, bool isFocused) =>
 			{
 				var element = outlineVerticesList.serializedProperty.GetArrayElementAtIndex(index);
@@ -69,7 +69,7 @@ public class OutlineEditor : Editor
 			Handles.DrawBezier(center + p1, center + p2, center + p1 + p3, center + p2 + p4, Color.green, null, 1);
 		}
 		else
-			Handles.DrawLine(center + p1, p2);
+			Handles.DrawLine(center + p1, center + p2);
 	}
 
 	void DrawTangentEditor(int i)
@@ -123,7 +123,8 @@ public class OutlineEditor : Editor
 				dotCapIds.TryGetValue(i, out dID);
 				if (selectedID == dID)
 					selectedIndex = i;
-				DrawTangentEditor(i);
+				if (t.outlineBezier)
+					DrawTangentEditor(i);
 			}
 
 			//last line if enabled
@@ -169,6 +170,7 @@ public class OutlineEditor : Editor
 
 		EditorGUILayout.Space();
 		t.flipY = EditorGUILayout.Toggle("flipY", t.flipY);
+		t.hideSprite = EditorGUILayout.Toggle("Hide sprite", t.hideSprite);
 		t.allowOutlineOverlap = EditorGUILayout.Toggle("Allow outline overlap", t.allowOutlineOverlap);
 		t.autoColor = EditorGUILayout.Toggle("Auto color outline", t.autoColor);
 		
@@ -186,5 +188,7 @@ public class OutlineEditor : Editor
 			outlineVerticesList.DoLayoutList();
 			serializedObject.ApplyModifiedProperties();
 		}
+		if (GUI.changed)
+			SceneView.RepaintAll();
 	}
 }

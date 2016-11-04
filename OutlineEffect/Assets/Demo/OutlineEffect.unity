@@ -379,6 +379,7 @@ MonoBehaviour:
   flipY: 0
   allowOutlineOverlap: 1
   autoColor: 0
+  hideSprite: 0
   autoOutline: 0
   lastLinkedToFirst: 0
   outlineBezier: 0
@@ -413,26 +414,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fullSpriteGlow: 0
   color: {r: 0, g: .580882311, b: .316480637, a: 1}
-  lineThickness: 1
+  lineThickness: .0719999969
   lineIntensity: .5
   alphaCutoff: .5
   pixelSnap: 0
   flipY: 0
-  allowOutlineOverlap: 1
+  allowOutlineOverlap: 0
   autoColor: 0
+  hideSprite: 0
   autoOutline: 0
   lastLinkedToFirst: 1
   outlineBezier: 1
   outlineVertices:
-  - position: {x: -.135905266, y: -.464644879, z: 0}
+  - position: {x: -.229248881, y: -.494585246, z: 0}
     t1: {x: .126874328, y: -.111050218, z: 0}
     t2: {x: -.205170751, y: .234731793, z: 0}
-  - position: {x: .0260363817, y: .531235039, z: 0}
+  - position: {x: -.22821784, y: .580035686, z: 0}
     t1: {x: -.20759356, y: .0021443367, z: 0}
     t2: {x: .212179661, y: .0242399573, z: 0}
-  - position: {x: .147667706, y: -.475415081, z: 0}
+  - position: {x: .265559971, y: .578787684, z: 0}
+    t1: {x: -.20759362, y: .0021443367, z: 0}
+    t2: {x: .212179661, y: .0242399573, z: 0}
+  - position: {x: .264291704, y: -.495284945, z: 0}
     t1: {x: .18310529, y: .168899417, z: 0}
-    t2: {x: -.133336127, y: -.104263872, z: 0}
+    t2: {x: -.139725268, y: -.102134496, z: 0}
 --- !u!212 &508253894
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -548,6 +553,7 @@ MonoBehaviour:
   flipY: 0
   allowOutlineOverlap: 1
   autoColor: 0
+  hideSprite: 0
   autoOutline: 1
   lastLinkedToFirst: 1
   outlineBezier: 1
@@ -658,6 +664,7 @@ MonoBehaviour:
   flipY: 0
   allowOutlineOverlap: 1
   autoColor: 0
+  hideSprite: 0
   autoOutline: 1
   lastLinkedToFirst: 1
   outlineBezier: 1
@@ -738,6 +745,7 @@ MonoBehaviour:
   flipY: 0
   allowOutlineOverlap: 1
   autoColor: 0
+  hideSprite: 0
   autoOutline: 1
   lastLinkedToFirst: 1
   outlineBezier: 1

@@ -19,6 +19,7 @@ public class Outline : MonoBehaviour
     public bool     flipY = false;
     public bool     allowOutlineOverlap = true;
     public bool     autoColor = false;
+    public bool     hideSprite = false;
 
     [Space]
     public bool     autoOutline = true;
@@ -33,6 +34,7 @@ public class Outline : MonoBehaviour
     int             outlineLayer;
 	Material        originalMaterial;
     Material        outlineMaterial;
+    LineRenderer    lineRenderer;
 
     new Renderer renderer;
 
@@ -50,11 +52,64 @@ public class Outline : MonoBehaviour
         return m;
     }
 
+    void CreateLinerendererPoints()
+    {
+        if (outlineVertices.Count <= 1)
+            return ;
+        List< Vector3 > points = new List< Vector3 >();
+        if (outlineBezier)
+        {
+
+        }
+        else
+        {
+            Vector3 lastPos = Vector3.zero;
+            Vector3 lastVector = Vector3.zero;
+            for (int i = 0; i < outlineVertices.Count; i++)
+            {
+                var p = outlineVertices[i].position;
+                if (i != 0)
+                {
+                    if (i > 1)
+                    {
+                        float angle = Vector3.Angle(lastVector, p - lastPos);
+                    }
+                    lastVector = p - lastPos;
+                }
+                //set simple vertice:
+                points.Add(p);
+                lastPos = p;
+            }
+            if (lastLinkedToFirst)
+                points.Add(outlineVertices[0].position);
+        }
+        lineRenderer.SetVertexCount(points.Count);
+        for (int i = 0; i < points.Count; i++)
+        {
+            //world scale fix:
+            Vector3 p = points[i];
+            p.x /= transform.localScale.x;
+            p.y /= transform.localScale.y;
+            p.z /= transform.localScale.z;
+            lineRenderer.SetPosition(i, p);
+        }
+    }
+
 	void Start()
     {
         outlineLayer = LayerMask.NameToLayer("Outline");
         renderer = GetComponent< Renderer >();
         outlineMaterial = CreateNewOutlineMaterial(color);
+        if (!autoOutline)
+        {
+            lineRenderer = gameObject.AddComponent< LineRenderer >();
+            lineRenderer.useWorldSpace = false;
+            lineRenderer.SetColors(color, color);
+            lineRenderer.SetWidth(lineThickness, lineThickness);
+            lineRenderer.SetVertexCount(0);
+            lineRenderer.material = outlineMaterial;
+            CreateLinerendererPoints();
+        }
     }
 
     void OnEnable()
@@ -90,6 +145,8 @@ public class Outline : MonoBehaviour
         renderer.sharedMaterial.SetInt("_AllowOutlineOverlap", allowOutlineOverlap ? 1 : 0);
         renderer.sharedMaterial.SetInt("_AutoColor", autoColor ? 1 : 0);
 
+        if (hideSprite)
+            renderer.enabled = true;
         if (renderer is MeshRenderer)
             renderer.sharedMaterial.mainTexture = originalMaterial.mainTexture;
 
@@ -103,6 +160,8 @@ public class Outline : MonoBehaviour
 
         renderer.material = originalMaterial;
         gameObject.layer = originalLayer;
+        if (hideSprite)
+            renderer.enabled = false;
     }
 
     [System.Serializable]
