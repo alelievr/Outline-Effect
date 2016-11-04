@@ -18,6 +18,14 @@ Full glow
 
 ![](http://image.noelshack.com/fichiers/2016/44/1478023356-screen-shot-2016-11-01-at-7-00-07-pm.png)
 
+hide sprite
+
+![](http://image.noelshack.com/fichiers/2016/44/1478259131-screen-shot-2016-11-04-at-11-32-24-am.png)
+
+custom outine editor
+
+![](http://image.noelshack.com/fichiers/2016/44/1478259131-screen-shot-2016-11-03-at-7-45-08-pm.png)
+
 FEATURES:
 ------------
 MeshRenderer support
@@ -45,6 +53,8 @@ NEW FEATURES:
 ✓ full colorization mode
 
 ✓ Color from last pixel encountered (like some TVs)
+
+✓ Hide sprite and keep glowing
 
 TODO:
 ----------
