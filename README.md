@@ -6,7 +6,17 @@ Forked from: https://github.com/cakeslice/Outline-Effect
 
 https://gfycat.com/RashGenuineBlackwidowspider
 
-![](http://i.imgur.com/yAKd5Qg.png "Optional title")
+Simple outline
+
+![](http://i.imgur.com/yAKd5Qg.png)
+
+Outline transparency + allow to see outline on outlined body
+
+![](http://image.noelshack.com/fichiers/2016/44/1478023356-screen-shot-2016-11-01-at-6-59-18-pm.png)
+
+Full glow
+
+![](http://image.noelshack.com/fichiers/2016/44/1478023356-screen-shot-2016-11-01-at-7-00-07-pm.png)
 
 FEATURES:
 ------------
