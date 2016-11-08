@@ -18,6 +18,14 @@ Full glow
 
 ![](http://image.noelshack.com/fichiers/2016/44/1478023356-screen-shot-2016-11-01-at-7-00-07-pm.png)
 
+Outline thickness
+
+![](http://image.noelshack.com/fichiers/2016/45/1478640501-screen-shot-2016-11-08-at-7-37-41-pm.png)
+
+Alpha cutoff
+
+![](http://image.noelshack.com/fichiers/2016/45/1478640501-screen-shot-2016-11-08-at-7-48-32-pm.png)
+
 hide sprite
 
 ![](http://image.noelshack.com/fichiers/2016/44/1478259131-screen-shot-2016-11-04-at-11-32-24-am.png)
