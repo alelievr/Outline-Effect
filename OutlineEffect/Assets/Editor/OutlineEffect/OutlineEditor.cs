@@ -72,12 +72,13 @@ public class OutlineEditor : Editor
 			Handles.DrawLine(center + p1, center + p2);
 	}
 
-	void DrawTangentEditor(int i)
+	bool DrawTangentEditor(int i)
 	{
-		Outline t = target as Outline;
-		var v = t.outlineVertices[i];
-		var p = v.position;
-		var center = t.transform.position;
+		Outline	t = target as Outline;
+		var		v = t.outlineVertices[i];
+		var		p = v.position;
+		var		center = t.transform.position;
+		bool	changed = false;
 
 		Handles.color = Color.magenta;
 		//tangent point line:
@@ -86,11 +87,18 @@ public class OutlineEditor : Editor
 		//tangent points:
 		float size = HandleUtility.GetHandleSize(center + p + v.t1) * 0.04f;
 		currentIndex = i * 2;
+		Vector3	tt = t.outlineVertices[i].t1;
 		t.outlineVertices[i].t1 = Handles.FreeMoveHandle(center + p + v.t1, Quaternion.identity, size, Vector3.zero, CustomDotCap) - center - p;
+		if (tt != t.outlineVertices[i].t1)
+			changed = true;
 		size = HandleUtility.GetHandleSize(center + p + v.t2) * 0.04f;
 		currentIndex++;
+		tt = t.outlineVertices[i].t2;
 		t.outlineVertices[i].t2 = Handles.FreeMoveHandle(center + p + v.t2, Quaternion.identity, size, Vector3.zero, CustomDotCap) - center - p;
+		if (tt != t.outlineVertices[i].t2)
+			changed = true;
 		Handles.color = Color.green;
+		return changed;
 	}
 	
 	void OnSceneGUI()
@@ -106,6 +114,7 @@ public class OutlineEditor : Editor
 			// grab the center of the parent
 			Vector3 center = t.transform.position;
 			int		selectedIndex = -1;
+			bool	changed = false;
 
 			if (GUIUtility.hotControl != 0 && GUIUtility.hotControl != selectedID)
 				selectedID = -1;
@@ -118,13 +127,17 @@ public class OutlineEditor : Editor
 				Handles.color = Color.green;
 				if (i != t.outlineVertices.Count - 1)
 					DrawEditorLine(center, i, i + 1);
+				Vector3		p = t.outlineVertices[i].position;
 				t.outlineVertices[i].position = Handles.FreeMoveHandle(center + t.outlineVertices[i].position, Quaternion.identity, size, Vector3.zero, CustomDotCap) - center;
+				if (p != t.outlineVertices[i].position)
+					changed = true;
 				int dID = -2;
 				dotCapIds.TryGetValue(i, out dID);
 				if (selectedID == dID)
 					selectedIndex = i;
 				if (t.outlineBezier)
-					DrawTangentEditor(i);
+					if (DrawTangentEditor(i))
+						changed = true;
 			}
 
 			//last line if enabled
@@ -152,6 +165,8 @@ public class OutlineEditor : Editor
 				}
 				serializedObject.ApplyModifiedProperties();
 			}
+			if (changed && !t.autoOutline && (EditorApplication.isPlaying || EditorApplication.isPaused))
+				t.CreateLinerendererPoints();
 		}
 	}
 
@@ -163,7 +178,7 @@ public class OutlineEditor : Editor
 
 		EditorGUILayout.Space();
 		t.color = EditorGUILayout.ColorField("Outline color", t.color);
-		t.lineThickness = EditorGUILayout.Slider("Line thickness", t.lineThickness, 0, 1);
+		t.lineThickness = EditorGUILayout.Slider("Line thickness", (int)t.lineThickness, 0, 50);
 		t.lineIntensity = EditorGUILayout.Slider("Line Intensity", t.lineIntensity, 0, 1);
 		t.alphaCutoff = EditorGUILayout.Slider("Alpha cutoff", t.alphaCutoff, 0, 1);
 		t.pixelSnap = EditorGUILayout.Toggle("Pixel snap", t.pixelSnap);
@@ -180,15 +195,19 @@ public class OutlineEditor : Editor
 		{
 			t.lastLinkedToFirst = EditorGUILayout.Toggle("Link first and last points", t.lastLinkedToFirst);
 			t.outlineBezier = EditorGUILayout.Toggle("Bezier lines", t.outlineBezier);
-		}
+			t.outlineStep = EditorGUILayout.Slider("Outline step", t.outlineStep, .005f, 1f);
 
-		if (!t.autoOutline)
-		{
 			serializedObject.Update();
 			outlineVerticesList.DoLayoutList();
 			serializedObject.ApplyModifiedProperties();
 		}
+
 		if (GUI.changed)
+		{
 			SceneView.RepaintAll();
+			if (EditorApplication.isPlaying || EditorApplication.isPaused)
+				if (!t.autoOutline)
+					t.CreateLinerendererPoints();
+		}
 	}
 }

@@ -1,33 +1,7 @@
-﻿/*
-//  Copyright (c) 2015 José Guerreiro. All rights reserved.
-//
-//  MIT license, see http://www.opensource.org/licenses/mit-license.php
-//  
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//  
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//  
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
-*/
-
-Shader "Hidden/OutlineBufferEffect" {
+﻿Shader "Hidden/OutlineBufferEffect" {
 	Properties
 	{
 		[PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
-		_Color ("Tint", Color) = (1,1,1,1)
-		[MaterialToggle] PixelSnap ("Pixel snap", Float) = 0
 	}
 
 	SubShader
@@ -49,6 +23,7 @@ Shader "Hidden/OutlineBufferEffect" {
 		#pragma surface surf NoLighting vertex:vert nofog keepalpha
 		#pragma multi_compile _ PIXELSNAP_ON
 
+		//unlit surface
 		fixed4 LightingNoLighting(SurfaceOutput s, fixed3 lightDir, fixed atten)
 		{
 			fixed4 c;
@@ -56,7 +31,6 @@ Shader "Hidden/OutlineBufferEffect" {
 			c.a = s.Alpha;
 			return c;
 		}
-
 
 		uniform float4 _MainTex_TexelSize;
 		
@@ -87,37 +61,76 @@ Shader "Hidden/OutlineBufferEffect" {
 			o.color = v.color;
 		}
 
+		void getColor(float2 uv, inout half4 color, Input IN)
+		{
+			half4 c = tex2D(_MainTex, IN.uv_MainTex + uv);
+			if (color.a < c.a)
+				color = c;
+		}
+
 		void surf (Input IN, inout SurfaceOutput o)
 		{
 			if (_FlipY == 1)
 				IN.uv_MainTex.y = 1 - IN.uv_MainTex.y;
 
-			//discarf if no outline
+			//discard if no outline
 			if (_Color.a == 0 || _LineThickness <= 0 || _LineIntensity == 0)
 				discard;
 			
+			//outline thickness
+			half4 color = half4(0);
+			if (_LineThickness == 1)
+			{
+				getColor(float2(0, + _MainTex_TexelSize.y), color, IN);
+				getColor(float2(0, - _MainTex_TexelSize.y), color, IN);
+				getColor(float2(- _MainTex_TexelSize.x, 0), color, IN);
+				getColor(float2(+ _MainTex_TexelSize.x, 0), color, IN);
+			}
+			else if (_LineThickness == 2)
+			{
+				getColor(float2(0, + _MainTex_TexelSize.y * 2), color, IN);
+				getColor(float2(0, - _MainTex_TexelSize.y * 2), color, IN);
+				getColor(float2(- _MainTex_TexelSize.x * 2, 0), color, IN);
+				getColor(float2(+ _MainTex_TexelSize.x * 2, 0), color, IN);
+				getColor(float2(+ _MainTex_TexelSize.x, + _MainTex_TexelSize.y), color, IN);
+				getColor(float2(+ _MainTex_TexelSize.x, - _MainTex_TexelSize.y), color, IN);
+				getColor(float2(- _MainTex_TexelSize.x, + _MainTex_TexelSize.y), color, IN);
+				getColor(float2(- _MainTex_TexelSize.x, - _MainTex_TexelSize.y), color, IN);
+			}
+			else
+			{
+				int xo = _LineThickness;
+				int yo = 0;
+				int	err = 0;
+				while (xo >= yo)
+				{
+					float x = xo * _MainTex_TexelSize;
+					float y = yo * _MainTex_TexelSize;
+					getColor(float2( x,  y), color, IN);
+					getColor(float2( y,  x), color, IN);
+					getColor(float2(-y,  x), color, IN);
+					getColor(float2(-x, -y), color, IN);
+					getColor(float2(-y, -x), color, IN);
+					getColor(float2( y, -x), color, IN);
+					getColor(float2( x, -y), color, IN);
+
+					yo++;
+					err += 1 + 2 * yo;
+					if (2 * (err - xo) + 1 > 0)
+					{
+						xo -= 1;
+						err += 1 - 2 * xo;
+					}
+				}
+			}
+
 			//get current pixel
-			fixed4 c = tex2D(_MainTex, IN.uv_MainTex);
-
-			//1 width outline:
-			half4 up = tex2D(_MainTex, IN.uv_MainTex + float2(0, _MainTex_TexelSize.y));
-			half4 down = tex2D(_MainTex, IN.uv_MainTex - float2(0, _MainTex_TexelSize.y));
-			half4 right = tex2D(_MainTex, IN.uv_MainTex - float2(_MainTex_TexelSize.x, 0));
-			half4 left = tex2D(_MainTex, IN.uv_MainTex + float2(_MainTex_TexelSize.x, 0));
-
-			half4 color;
-			if (up.a != 0)
-				color = up;
-			else if (down.a != 0)
-				color = down;
-			else if (left.a != 0)
-				color = left;
-			else if (right.a != 0)
-				color = right;
-			
+			half4 c = tex2D(_MainTex, IN.uv_MainTex);
 			if (color.a != 0)
 			{
-				if (_FullSprite == 1 || (_FullSprite == 0 && c.a == 0))
+				if ((_FullSprite == 1)
+					|| (_FullSprite == 0 && c.a == 0 && _AlphaCutoff == 0)
+					|| (_FullSprite == 0 && c.a <= _AlphaCutoff && color.a >= _AlphaCutoff))
 				{
 					if (_AutoColor)
 					{
@@ -126,8 +139,9 @@ Shader "Hidden/OutlineBufferEffect" {
 					}
 					else
 					{
+						//TODO: blend with others glows
 						o.Albedo = (1 - _Color) / 2;
-						o.Alpha = _Color.a * _LineIntensity; //TODO: blend with others glows
+						o.Alpha = _Color.a * _LineIntensity;
 					}
 				}
 				else if (!_AllowOutlineOverlap)

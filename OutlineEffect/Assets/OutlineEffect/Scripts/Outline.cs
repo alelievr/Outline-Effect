@@ -12,7 +12,7 @@ public class Outline : MonoBehaviour
     [RangeAttribute(0f, 1f)]
     public float    lineIntensity = 1f;
     [RangeAttribute(0f, 1f)]
-    public float    alphaCutoff = .5f;
+    public float    alphaCutoff = 0f;
     public bool     pixelSnap = false;
 
     [Space]
@@ -25,6 +25,7 @@ public class Outline : MonoBehaviour
     public bool     autoOutline = true;
     public bool     lastLinkedToFirst = true;
     public bool     outlineBezier = true;
+    public float    outlineStep = .05f;
 
     public List< OutlineVertice > outlineVertices = new List< OutlineVertice >();
     
@@ -52,14 +53,33 @@ public class Outline : MonoBehaviour
         return m;
     }
 
-    void CreateLinerendererPoints()
+    void CreateBezierPoints(int i1, int i2, List< Vector3 > points)
+    {
+        Vector3 point1 = outlineVertices[i1].position;
+        Vector3 point4 = outlineVertices[i2].position;
+        Vector3 point3 = outlineVertices[i2].t1 + point4;
+        Vector3 point2 = outlineVertices[i1].t2 + point1;
+        for (float t = 0.00f; t < 1.0f + outlineStep; t= t + outlineStep) {
+            float xValue = Mathf.Pow((1-t), 3) * point1.x + 3 * Mathf.Pow((1-t), 2) * t * point2.x + 3 * (1-t) * Mathf.Pow(t, 2) * point3.x + Mathf.Pow(t, 3) * point4.x;
+            float yValue = Mathf.Pow((1-t), 3) * point1.y + 3 * Mathf.Pow((1-t), 2) * t * point2.y + 3 * (1-t) * Mathf.Pow(t, 2) * point3.y + Mathf.Pow(t, 3) * point4.y;
+            points.Add(new Vector3(xValue, yValue, 0));
+        }
+    }
+
+    public void CreateLinerendererPoints()
     {
         if (outlineVertices.Count <= 1)
             return ;
         List< Vector3 > points = new List< Vector3 >();
         if (outlineBezier)
         {
-
+            if (outlineStep < 0.005f)
+                return ;
+            
+            for (int i = 0; i < outlineVertices.Count - 1; i++)
+                CreateBezierPoints(i, i + 1, points);
+            if (lastLinkedToFirst)
+                CreateBezierPoints(outlineVertices.Count - 1, 0, points);
         }
         else
         {
@@ -93,6 +113,8 @@ public class Outline : MonoBehaviour
             p.z /= transform.localScale.z;
             lineRenderer.SetPosition(i, p);
         }
+        lineRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        lineRenderer.receiveShadows = false;
     }
 
 	void Start()
@@ -105,9 +127,9 @@ public class Outline : MonoBehaviour
             lineRenderer = gameObject.AddComponent< LineRenderer >();
             lineRenderer.useWorldSpace = false;
             lineRenderer.SetColors(color, color);
-            lineRenderer.SetWidth(lineThickness, lineThickness);
+            lineRenderer.SetWidth(lineThickness / 100, lineThickness / 100);
             lineRenderer.SetVertexCount(0);
-            lineRenderer.material = outlineMaterial;
+            lineRenderer.sharedMaterial = outlineMaterial;
             CreateLinerendererPoints();
         }
     }
