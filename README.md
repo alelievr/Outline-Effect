@@ -64,16 +64,14 @@ NEW FEATURES:
 
 ✓ Hide sprite and keep glowing
 
-TODO:
-----------
+✓ Outline Editor (like polygon collider editor)
 
-No graphic glitches on simple polygon glow
+✓ Bezier curve for custom outline
+
+TODO:
+-----------
 
 Color blend animation support and glow size
-
-Outline Editor (like polygon collider editor)
-
-Bezier curve for custom outline
 
 INSTALLATION:
 ------------
