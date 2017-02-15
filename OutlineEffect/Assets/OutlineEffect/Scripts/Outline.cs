@@ -25,9 +25,15 @@ public class Outline : MonoBehaviour
     public bool     autoOutline = true;
     public bool     lastLinkedToFirst = true;
     public bool     outlineBezier = true;
+
     public float    outlineStep = .05f;
 
-    public List< OutlineVertice > outlineVertices = new List< OutlineVertice >();
+    public List< OutlineVertice > outlineVertices = new List< OutlineVertice >()
+    {
+        new OutlineVertice(Vector3.zero),
+        new OutlineVertice(Vector3.right),
+        new OutlineVertice(Vector3.one)
+    };
     
     OutlineEffect   outlineEffect;
 
@@ -59,7 +65,7 @@ public class Outline : MonoBehaviour
         Vector3 point4 = outlineVertices[i2].position;
         Vector3 point3 = outlineVertices[i2].t1 + point4;
         Vector3 point2 = outlineVertices[i1].t2 + point1;
-        for (float t = 0.00f; t < 1.0f + outlineStep; t= t + outlineStep) {
+        for (float t = 0.00f; t < 1f; t = t + outlineStep) {
             float xValue = Mathf.Pow((1-t), 3) * point1.x + 3 * Mathf.Pow((1-t), 2) * t * point2.x + 3 * (1-t) * Mathf.Pow(t, 2) * point3.x + Mathf.Pow(t, 3) * point4.x;
             float yValue = Mathf.Pow((1-t), 3) * point1.y + 3 * Mathf.Pow((1-t), 2) * t * point2.y + 3 * (1-t) * Mathf.Pow(t, 2) * point3.y + Mathf.Pow(t, 3) * point4.y;
             points.Add(new Vector3(xValue, yValue, 0));
@@ -103,7 +109,7 @@ public class Outline : MonoBehaviour
             if (lastLinkedToFirst)
                 points.Add(outlineVertices[0].position);
         }
-        lineRenderer.SetVertexCount(points.Count);
+        lineRenderer.numPositions = points.Count;
         for (int i = 0; i < points.Count; i++)
         {
             //world scale fix:
@@ -124,13 +130,21 @@ public class Outline : MonoBehaviour
         outlineMaterial = CreateNewOutlineMaterial(color);
         if (!autoOutline)
         {
-            lineRenderer = gameObject.AddComponent< LineRenderer >();
+            GameObject lineObject = new GameObject("lineRenderer");
+            lineObject.transform.parent = transform;
+            lineRenderer = lineObject.AddComponent< LineRenderer >();
             lineRenderer.useWorldSpace = false;
-            lineRenderer.SetColors(color, color);
-            lineRenderer.SetWidth(lineThickness / 100, lineThickness / 100);
-            lineRenderer.SetVertexCount(0);
-            lineRenderer.sharedMaterial = outlineMaterial;
+            lineRenderer.startColor = color;
+            lineRenderer.endColor = color;
+            lineRenderer.startWidth = lineThickness / 100;
+            lineRenderer.endWidth = lineThickness / 100;
+            lineRenderer.numPositions = 0;
+            lineRenderer.sharedMaterial = new Material(Shader.Find("Sprites/Default"));
             CreateLinerendererPoints();
+            
+            lineObject.transform.localPosition = Vector3.zero;
+            lineObject.transform.localRotation = Quaternion.identity;
+            lineObject.transform.localScale = Vector3.one;
         }
     }
 
@@ -148,6 +162,8 @@ public class Outline : MonoBehaviour
 
     public void PreRender()
     {
+        if (!autoOutline)
+            return ;
         //update material datas:
         originalMaterial = renderer.sharedMaterial;
         originalLayer = gameObject.layer;
@@ -177,6 +193,8 @@ public class Outline : MonoBehaviour
 
     public void PostRender()
     {
+        if (!autoOutline)
+            return ;
         if (renderer is MeshRenderer)
             renderer.sharedMaterial.mainTexture = null;
 

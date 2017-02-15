@@ -78,7 +78,7 @@
 				discard;
 			
 			//outline thickness
-			half4 color = half4(0);
+			half4 color = half4(0, 0, 0, 0);
 			if (_LineThickness == 1)
 			{
 				getColor(float2(0, + _MainTex_TexelSize.y), color, IN);

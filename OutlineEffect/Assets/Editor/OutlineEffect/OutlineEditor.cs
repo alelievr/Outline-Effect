@@ -15,7 +15,6 @@ public class OutlineEditor : Editor
 
 	void OnEnable()
 	{
-		Outline t = target as Outline;
 		selectedID = -1;
 
 		outlineVerticesList = new ReorderableList(
@@ -41,6 +40,17 @@ public class OutlineEditor : Editor
 					GUIContent.none
 				);
 			};
+
+        outlineVerticesList.onAddCallback = (ReorderableList l) =>
+        {
+            var index = l.serializedProperty.arraySize;
+            l.serializedProperty.arraySize++;
+            l.index = index;
+			var element = outlineVerticesList.serializedProperty.GetArrayElementAtIndex(index);
+			element.FindPropertyRelative("position").vector3Value = Vector3.up * .2f;
+			element.FindPropertyRelative("t1").vector3Value = Vector3.up * .1f;
+			element.FindPropertyRelative("t2").vector3Value = Vector3.down * .1f;
+        };
 	}
 
 	void CustomDotCap(int id, Vector3 pos, Quaternion rot, float size)
@@ -147,21 +157,28 @@ public class OutlineEditor : Editor
 			//keyboard event to create / delete seleted node
 			if (Event.current.type == EventType.KeyDown)
 			{
+				Debug.Log("selectedIndex: " + selectedIndex);
+				Debug.Log("selectedID: " + selectedID);
 				if (Event.current.keyCode == KeyCode.P)
 				{
-					Vector3 point = (selectedID == -1) ? Vector3.zero : t.outlineVertices[selectedIndex].position;
-					Vector3 t1 = (selectedID == -1) ? Vector3.zero : t.outlineVertices[selectedIndex].t1;
-					Vector3 t2 = (selectedID == -1) ? Vector3.zero : t.outlineVertices[selectedIndex].t2;
-					t.outlineVertices.Insert(selectedIndex, new Outline.OutlineVertice(point, t1, t2));
+					Vector3 point = (selectedID == -1) ? Vector3.up * .2f : t.outlineVertices[selectedIndex].position;
+					Vector3 t1 = (selectedID == -1) ? Vector3.up * .1f : t.outlineVertices[selectedIndex].t1;
+					Vector3 t2 = (selectedID == -1) ? Vector3.down * .1f : t.outlineVertices[selectedIndex].t2;
+					t.outlineVertices.Insert((selectedID == -1) ? 0 : selectedIndex, new Outline.OutlineVertice(point, t1, t2));
 					serializedObject.ApplyModifiedProperties();
 					SceneView.RepaintAll();
 				}
 				if (Event.current.keyCode == KeyCode.M)
 				{
-					t.outlineVertices.RemoveAt(selectedIndex);
-					serializedObject.ApplyModifiedProperties();
-					dotCapIds.Remove(selectedIndex);
-					SceneView.RepaintAll();
+					if (selectedIndex != -1)
+					{
+						t.outlineVertices.RemoveAt(selectedIndex);
+						serializedObject.ApplyModifiedProperties();
+						dotCapIds.Remove(selectedIndex);
+						SceneView.RepaintAll();
+					}
+					else
+						Debug.LogWarning("no point selected to remove !");
 				}
 				serializedObject.ApplyModifiedProperties();
 			}
