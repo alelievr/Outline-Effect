@@ -140,7 +140,7 @@
 					else
 					{
 						//TODO: blend with others glows
-						o.Albedo = (1 - _Color) / 2;
+						o.Albedo = half3(((1 - _Color) / 2).xyz);
 						o.Alpha = _Color.a * _LineIntensity;
 					}
 				}

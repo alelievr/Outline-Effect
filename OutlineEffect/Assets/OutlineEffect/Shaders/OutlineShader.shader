@@ -1,4 +1,6 @@
-﻿Shader "Hidden/OutlineEffect" 
+﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
+Shader "Hidden/OutlineEffect" 
 {
 	Properties 
 	{
@@ -32,7 +34,7 @@
 			v2f vert(appdata_img v)
 			{
 			   	v2f o;
-				o.position = mul(UNITY_MATRIX_MVP, v.vertex);
+				o.position = UnityObjectToClipPos(v.vertex);
 				o.uv = v.texcoord;
 				
 			   	return o;

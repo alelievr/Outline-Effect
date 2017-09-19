@@ -109,7 +109,7 @@ public class Outline : MonoBehaviour
             if (lastLinkedToFirst)
                 points.Add(outlineVertices[0].position);
         }
-        lineRenderer.numPositions = points.Count;
+        lineRenderer.positionCount = points.Count;
         for (int i = 0; i < points.Count; i++)
         {
             //world scale fix:
@@ -138,7 +138,7 @@ public class Outline : MonoBehaviour
             lineRenderer.endColor = color;
             lineRenderer.startWidth = lineThickness / 100;
             lineRenderer.endWidth = lineThickness / 100;
-            lineRenderer.numPositions = 0;
+            lineRenderer.positionCount = 0;
             lineRenderer.sharedMaterial = new Material(Shader.Find("Sprites/Default"));
             CreateLinerendererPoints();
             
